@@ -5905,6 +5905,297 @@ document.querySelectorAll('.review-section').forEach(section => {
 </body>
 </html>
 
+
+<div class="ranking-container">
+    <div class="ranking-header">Bảng Xếp Hạng Tháng 11</div>
+    <div class="ranking-controls">
+        <button onclick="sortRankings('votes')">Sắp xếp theo Votes</button>
+        <button onclick="sortRankings('change')">Sắp xếp theo Thay Đổi</button>
+        <button onclick="sortRankings('rating')">Sắp xếp theo Đánh Giá</button>
+    </div>
+    <div class="ranking-container">
+        <ul class="ranking-list" id="ranking-list"></ul>
+    </div>
+    
+</div>
+<!-- Thêm CSS -->
+<style>
+    body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #fff;
+        }
+
+        .ranking-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .ranking-header {
+            text-align: center;
+            font-size: 24px;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Đổ bóng cho chữ */
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .ranking-controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .ranking-controls button {
+            background: #ff6b6b;
+            color: #000000;
+            border: none;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Đổ bóng cho chữ */
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 1px solid #fff; /* Viền vàng */
+
+            margin: 0 10px;
+            transition: background 0.3s ease;
+        }
+
+        .ranking-controls button:hover {
+            background: #1a1515;
+            color: #ffffff;
+        }
+
+        .ranking-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #292929;
+            border-bottom: 1px solid #444;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .ranking-item:hover {
+            background: #333;
+            transform: translateY(-3px);
+        }
+
+        .ranking-position {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffd700;
+            width: 40px;
+            text-align: center;
+            position: relative;
+        }
+   
+
+        .ranking-avatar {
+            width: 70px;
+            height: 70px;
+            margin: 0 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .ranking-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .ranking-avatar img:hover {
+            transform: scale(1.1);
+        }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+            color: #fff;
+        }
+
+        .ranking-likes {
+            font-size: 16px;
+            color: #ff6b6b;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ranking-likes i {
+            margin-right: 5px;
+        }
+
+        .ranking-change {
+            font-size: 16px;
+            font-weight: bold;
+            color: #4caf50;
+        }
+
+        .ranking-change.negative {
+            color: #e53935;
+        }
+
+        .ranking-ratings {
+            font-size: 14px;
+            color: #bbb;
+     }        
+/* Định nghĩa chung cho biểu tượng đặc biệt */
+.special-icon {
+    width: 30px;
+    height: 30px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+/* Vương miện cho Top 1 */
+.ranking-position.top-1 .special-icon {
+    background-image: url('https://i.ibb.co/wSQJfrg/64ec2c8fedc1c.png');
+}
+
+/* Ngôi sao cho Top 2 */
+.ranking-position.top-2 .special-icon {
+    background-image: url('https://i.ibb.co/HgdLXyT/671bab6aa4122.png');
+}
+
+/* Huy chương cho Top 3 */
+.ranking-position.top-3 .special-icon {
+    background-image: url('https://i.ibb.co/7pykV2z/2055905-removebg-preview.png');
+}
+
+</style>
+<script>
+
+
+
+   const rankings = [
+    { position: 1, name: "Chang", likes: 26035, change: 4.29, ratings: 9450, avatar: "https://i.ibb.co/CMzrMHz/378854303-855617289244178-5284751463597591029-n.jpg", rating: 5 },
+    { position: 2, name: "Gia Hân", likes: 20340, change: -3.21, ratings: 6146, avatar: "https://i.ibb.co/1TRWLYN/448066649-3778888015771584-1306281735794756456-n.jpg", rating: 4.5 },
+    { position: 3, name: "Thúy Vy", likes: 19021, change: 5.56, ratings: 4753, avatar: "https://i.ibb.co/vXtLZBD/photo-2022-12-27-10-55-09.jpg", rating: 4.5 },
+    { position: 4, name: "JenNi", likes: 17730, change: -3.72, ratings: 4012, avatar: "https://i.ibb.co/fv3cs1W/461767365-18326685538194877-298191053835901842-n.jpg", rating: 4.5 },
+    { position: 5, name: "An Nhi", likes: 15136, change: 0.62, ratings: 3590, avatar: "https://i.ibb.co/QXDZgJ1/reup-be-ana-pga-chuan-mat-xinh-body-dep-vu-to-dam-tiep-cac-boss-3113753-original.jpg", rating: 4 },
+    { position: 6, name: "Hạ Vũ", likes: 14373, change: 0.33, ratings: 2567, avatar: "https://i.ibb.co/t33RTG6/398466992-1133936840908077-2787695977615575197-n.jpg", rating: 4 },
+    { position: 7, name: "Anh Thư", likes: 12346, change: -0.87, ratings: 2244, avatar: "https://i.ibb.co/P91y2Dp/photo-2024-08-15-12-49-14.jpg", rating: 4 },
+    { position: 8, name: "Yuna", likes: 10332, change: 1.38, ratings: 1670, avatar: "https://i.ibb.co/7gT51Mr/458315545-2877650585726341-611499681677932774-n.jpg", rating: 3.5 },
+    { position: 9, name: "Lan Vy", likes: 9317, change: -0.73, ratings: 1341, avatar: "https://i.ibb.co/GWmbNJt/426318819-1098436931490982-4805370043843722560-n.jpg", rating: 3.5 },
+    { position: 10, name: "Huyền Anh", likes: 8295, change: -0.67, ratings: 1084, avatar: "https://i.ibb.co/YpKMmTm/photo-2022-12-22-09-00-19.jpg", rating: 3 },
+];
+
+rankings.forEach((item, index) => {
+    const specialClass = item.position === 1 ? "top-1"
+        : item.position === 2 ? "top-2"
+        : item.position === 3 ? "top-3" : "";
+    });      
+
+const rankingList = document.getElementById("ranking-list");
+
+// Hàm tăng số liệu ngẫu nhiên
+function updateDynamicData() {
+    rankings.forEach(item => {
+        const likeChange = Math.floor(Math.random() * 5) + 1; // Tăng 1-5 lượt thích
+        const percentChange = Math.random() * 0.1; // Tăng chậm 0.1%
+        item.likes += likeChange;
+        item.change += percentChange;
+        item.ratings += Math.floor(Math.random() * 2); // Thêm số lượt đánh giá
+    });
+    renderRankings();
+}
+
+// Hàm tạo hiệu ứng động
+function animateValue(element, start, end, duration) {
+    let startTime = null;
+
+    function step(currentTime) {
+        if (!startTime) startTime = currentTime;
+        const progress = Math.min((currentTime - startTime) / duration, 1);
+        const value = Math.floor(progress * (end - start) + start);
+        element.textContent = value;
+
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        }
+    }
+
+    requestAnimationFrame(step);
+}
+
+function renderRankings() {
+    rankingList.innerHTML = ""; // Xóa nội dung cũ
+
+    rankings.forEach((item) => {
+        const specialClass = item.position === 1 ? "top-1"
+            : item.position === 2 ? "top-2"
+            : item.position === 3 ? "top-3" : "";
+
+        const listItem = document.createElement("li");
+        listItem.className = `ranking-item ${specialClass}`;
+        listItem.innerHTML = `
+            <div class="ranking-position">
+                ${item.position}
+                ${specialClass ? '<div class="special-icon"></div>' : ""}
+            </div>
+            <div class="ranking-avatar">
+                <img src="${item.avatar}" alt="${item.name}">
+            </div>
+            <div class="ranking-info">
+                <p class="ranking-name">${item.name}</p>
+                <div class="ranking-likes">
+                    <i class="fas fa-heart"></i> 
+                    <span class="likes-count">${item.likes}</span> Thích
+                    <span class="ranking-ratings">${item.ratings} lượt đánh giá</span>
+                </div>
+            </div>
+            <div class="ranking-change ${item.change < 0 ? "negative" : ""}">
+                <span class="change-count">${item.change.toFixed(2)}</span>% 
+            </div>
+        `;
+        rankingList.appendChild(listItem);
+    });
+}
+function sortRankings(criteria) {
+    rankings.sort((a, b) => {
+        if (criteria === "likes") return b.likes - a.likes;
+        if (criteria === "change") return b.change - a.change;
+        if (criteria === "rating") return b.rating - a.rating;
+        return 0;
+    });
+    renderRankings();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    renderRankings();
+    setInterval(updateDynamicData, 3000); // Cập nhật số liệu mỗi 3 giây
+});
+</script>
+</body>
+</html>
+
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -6789,5 +7080,4 @@ body {
 
 </body>
 </html>
-
 
