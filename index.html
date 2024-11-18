@@ -565,24 +565,33 @@ h1 {
    
     <style>
     
-        .container {
-            text-align: center;
-            width: 60%;
-            margin-top: -50px;
-            margin: 0 auto;
-            padding: -30px;
-            background: linear-gradient(45deg, #ff7eb9, #ff65a3); /* Nền hồng gradient */
-            box-shadow: 0 4px 8px #000000;
-            color: #000000; /* Chữ đen */
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Đổ bóng cho chữ */
-            border: 2px solid #000000; /* Viền cam nhạt */
+    /* Container tổng thể */
+      #chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 360px;
+            height: 700px;
+            border: 3px solid #0c5d9d;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #2e8bc0, #0c5d9d);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            z-index: 1000;
+            font-family: 'Arial', sans-serif;
         }
 
-        .header {
+        #chat-header {
+            background: #0c5d9d;
+            color: #fff;
+            padding: 15px;
             text-align: center;
-            padding: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            text-transform: uppercase;
         }
-
         .banner-container {
           margin-top: -30px;
             overflow: hidden;
@@ -971,128 +980,180 @@ h1 {
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Chat Tự Động</title>
     <style>
-        /* General Chat Container Styling */
+        /* Container tổng thể */
         #chat-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 300px;
-            height: 550px;
-            border: 2px solid #0084ff;
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.9);
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-            z-index: 1000;
-            overflow: hidden;
-        }
-
-        #chat-box {
-            flex: 1;
+              position: fixed;
+              bottom: 20px;
+              right: 20px;
+              width: 360px;
+              height: 700px;
+              border: 3px solid #0c5d9d;
+              display: flex;
+              flex-direction: column;
+              background: linear-gradient(135deg, #2e8bc0, #0c5d9d);
+              border-radius: 15px;
+              box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+              overflow: hidden;
+              z-index: 1000;
+              font-family: 'Arial', sans-serif;
+          }
+  
+          #chat-header {
+              background: #0c5d9d;
+              color: #fff;
+              padding: 15px;
+              text-align: center;
+              font-weight: bold;
+              font-size: 18px;
+              text-transform: uppercase;
+          }
+  
+  
+          #chat-box {
+              flex: 1;
+              padding: 15px;
+              border-radius: 15px;
+              overflow-y: auto;
+              background-color: #f4f4f4;
+              border: 3px solid #0c5d9d;
+          }
+          /* Message Styling */
+          .chat-message {
+              display: flex;
+              align-items: center;
+              margin-bottom: 15px;
+              max-width: 100%;
+          }
+  
+          .chat-message.self {
+              justify-content: flex-end;
+          }
+          .time-stamp {
+              font-size: 12px;
+              color: #aaa;
+              margin-top: 5px;
+              text-align: right;
+          }
+          .avatar {
+              padding: -10px;
+              width: 45px;
+              height: 45px;
+              border-radius: 50%;
+              margin: 0 10px;
+              border: 2px solid #0099ff;
+          }
+  
+          .message-bubble {
+              background-color: #e1f5fe;
+              padding: 10px;
+              border-radius: 10px;
+              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+              position: relative;
+              max-width: 250px;
+             
+          }
+  
+          /* User messages on the right */
+          .self .message-bubble {
+              background-color: #007bff;
+              color: white;
+              text-align: right;
+          }
+  
+          /* Character messages on the left */
+          .character-message {
             
-            padding: 10px;
-            overflow-y: auto;
-            background-color: #fafafa;
-            border-bottom: 1px solid #ddd;
-        }
-
-        /* Message Styling */
-        .chat-message {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            max-width: 100%;
-        }
-
-        .chat-message.self {
-            justify-content: flex-end;
-        }
-
-        .avatar {
-            padding: -10px;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            margin: 0 10px;
-            border: 2px solid #0099ff;
-        }
-
-        .message-bubble {
-            background-color: #e1f5fe;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: relative;
-            max-width: 250px;
-           
-        }
-
-        /* User messages on the right */
-        .self .message-bubble {
-            background-color: #007bff;
-            color: white;
-            text-align: right;
-        }
-
-        /* Character messages on the left */
-        .character-message {
-          
-            color: black;
-           
-            border-radius: 10px;
-        }
-
-        /* Username and Status */
-        .user-name {
-            font-weight: bold;
-            font-size: 14px;
-            color: #008cff;
-            padding: -10px;
-        }
-
-        .message-status {
-            font-size: 12px;
-            color: #0084ff;
-            position: absolute;
-            bottom: -15px;
-            right: 0;
-        }
-
-        /* Input Styling */
-        #chat-input {
-            width: 40%;
-            padding: 0px;
-            border-radius: 10px;
-            border: 1px solid #00aeff;
-            margin-top: 0px;
-        }
-
-        button {
-           
-   
-            color: rgb(255, 255, 255);
-          
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-left: 5px;
-        }
-
-        button:hover {
-            background-color: #000000;
-            color: rgb(255, 255, 255);
-        }
-        /* Tắt thu phóng cho input trên thiết bị di động */
-input[type="text"] {
-    font-size: 16px; /* Ít nhất 16px để tránh tự động phóng to */
-    touch-action: manipulation; /* Tắt thu phóng khi chạm */
-}
-
-
-    </style>
-</head>
-<body>
+              color: black;
+             
+              border-radius: 10px;
+          }
+  
+          /* Username and Status */
+          .user-name {
+              font-weight: bold;
+              font-size: 14px;
+              color: #008cff;
+              padding: -10px;
+          }
+  
+          .message-status {
+              font-size: 12px;
+              color: #0084ff;
+              position: absolute;
+              bottom: -15px;
+              right: 0;
+          }
+  
+          #chat-input-container {
+              display: flex;
+              align-items: center;
+              padding: 10px;
+              background-color: #f4f4f4;
+              border-top: 1px solid #ddd;
+          }
+  
+          #chat-input {
+              flex: 1;
+              padding: 10px;
+              border-radius: 20px;
+              border: 1px solid #ccc;
+              margin-right: 10px;
+          }
+  
+          #send-btn {
+              padding: 10px 20px;
+              background: #007bff;
+              color: white;
+              border: none;
+              border-radius: 20px;
+              cursor: pointer;
+              font-weight: bold;
+              transition: 0.3s;
+          }
+  
+          #send-btn:hover {
+              background: #0056b3;
+          }
+  
+          /* Thanh cuộn */
+          #chat-box::-webkit-scrollbar {
+              width: 8px;
+          }
+  
+          #chat-box::-webkit-scrollbar-thumb {
+              background: #007bff;
+              border-radius: 5px;
+          }
+  
+          #chat-box::-webkit-scrollbar-track {
+              background: #f1f1f1;
+          }
+  
+          button {
+             
+     
+              color: rgb(255, 255, 255);
+            
+              border-radius: 5px;
+              cursor: pointer;
+              transition: background-color 0.3s ease;
+              margin-left: 5px;
+          }
+  
+          button:hover {
+              background-color: #000000;
+              color: rgb(255, 255, 255);
+          }
+          /* Tắt thu phóng cho input trên thiết bị di động */
+  input[type="text"] {
+      font-size: 16px; /* Ít nhất 16px để tránh tự động phóng to */
+      touch-action: manipulation; /* Tắt thu phóng khi chạm */
+  }
+  
+  
+      </style>
+  </head>
+  <body>
   
     <div id="chat-container">
         <div id="chat-box"></div>
